@@ -5,6 +5,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import * as dat from 'dat.gui';
 import pointsVertexShader from './shaders/points/vertex.glsl';
 import pointsFragmentShader from './shaders/points/fragment.glsl';
+import { RepeatWrapping } from 'three';
 
 /**
  * Base
@@ -27,6 +28,7 @@ const geometry_sphere = new THREE.SphereGeometry( 1, 64 , 32 );
 
 // Load Textures 
 const texture_map = new THREE.TextureLoader().load( '/textures/test.JPG' );
+texture_map.wrapS = texture_map.wrapT = RepeatWrapping
 
 
 
@@ -76,10 +78,10 @@ projector.position.set(0, 10, 5)
 projector.lookAt(0, 0, 0)
 scene.add(projector);
 
-const viewMatrixCamera = projector.matrixWorldInverse.clone()
-const projectionMatrixCamera = projector.projectionMatrix.clone();
-const modelMatrixCamera = projector.matrixWorld.clone()
-const projPosition = projector.position.clone()
+const viewMatrixCamera = projector.matrixWorldInverse
+const projectionMatrixCamera = projector.projectionMatrix;
+const modelMatrixCamera = projector.matrixWorld
+const projPosition = projector.position
 
 console.log(projector);
 projector.updateProjectionMatrix();
