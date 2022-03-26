@@ -3,8 +3,6 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import * as dat from 'dat.gui';
-import testVertexShader from './shaders/test/vertex.glsl';
-import testFragmentShader from './shaders/test/fragment.glsl';
 import pointsVertexShader from './shaders/points/vertex.glsl';
 import pointsFragmentShader from './shaders/points/fragment.glsl';
 
@@ -29,25 +27,6 @@ const geometry_sphere = new THREE.SphereGeometry( 1, 64 , 32 );
 
 // Load Textures 
 const texture_map = new THREE.TextureLoader().load( '/textures/test.JPG' );
-// console.log(texture_map);
-
-
-// Material
-const material = new THREE.ShaderMaterial({
-  vertexShader: testVertexShader,
-  fragmentShader: testFragmentShader,
-  uniforms:
-  {
-    uTest: { value: 0 },
-    uUvShift: { value: new THREE.Vector2(0, 0) },
-    uUvScale: { value: new THREE.Vector2(1, 1) },
-    uUvRot: { value: 1 },
-    uTransition: { value: new THREE.Vector3(0.5, 0.25, 1) },
-    uTestVec2: { value: new THREE.Vector2(1, 0) },
-    uTexture: {type: 't', value: texture_map},
-  },
-  side: THREE.DoubleSide,
-});
 
 
 
