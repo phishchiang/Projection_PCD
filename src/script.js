@@ -6,6 +6,7 @@ import * as dat from 'dat.gui';
 import pointsVertexShader from './shaders/points/vertex.glsl';
 import pointsFragmentShader from './shaders/points/fragment.glsl';
 import { RepeatWrapping } from 'three';
+import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader.js';
 
 /**
  * Base
@@ -94,6 +95,28 @@ gui.add(projector.position, 'x').min(-100).max(100).step(0.01).name('Projector_X
 
 
 
+
+
+const firefliesMaterial = new THREE.ShaderMaterial({
+  uniforms:
+  {
+    uSize: { value: 100 },
+    uTime: { value: 0 },
+    uTestVec2: { value: new THREE.Vector2(1, 0) },
+    uTexture: { value: texture_map },
+    viewMatrixCamera: { value: viewMatrixCamera },
+    projectionMatrixCamera: { value: projectionMatrixCamera },
+    modelMatrixCamera: { value: modelMatrixCamera },
+    projPosition: { value: projPosition },
+  },
+  // blending: THREE.AdditiveBlending,
+  vertexShader: pointsVertexShader,
+  fragmentShader: pointsFragmentShader, 
+})
+
+gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'x').min(-100).max(100).step(0.01).name('uTest_X');
+gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'y').min(0).max(1).step(0.01).name('uTest_Y');
+
 const loader = new FBXLoader();
 
 loader.load('/fbx/ball_uv.fbx', function (object) {
@@ -107,45 +130,45 @@ loader.load('/fbx/ball_uv.fbx', function (object) {
   scene.add(object);
   object.scale.set(1, 1, 1);
   // object.translateZ = 10.0;
-  object.children[0].material = material;
+  object.children[0].material = firefliesMaterial;
   object.position.z = 5;
   // console.log(object);
   // console.log(object.children[0].geometry.attributes);
 });
 
-const firefliesMaterial = new THREE.ShaderMaterial({
-  uniforms:
-  {
-      uSize: { value: 100 },
-      uTime: { value: 0 },
-      uTestVec2: { value: new THREE.Vector2(1, 0) },
-      uTexture: { value: texture_map },
-      viewMatrixCamera: { value: viewMatrixCamera },
-      projectionMatrixCamera: { value: projectionMatrixCamera },
-      modelMatrixCamera: { value: modelMatrixCamera },
-      projPosition: { value: projPosition },
-  },
-  // blending: THREE.AdditiveBlending,
-  vertexShader: pointsVertexShader,
-  fragmentShader: pointsFragmentShader, 
-})
-
-gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'x').min(-100).max(100).step(0.01).name('uTest_X');
-gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'y').min(0).max(1).step(0.01).name('uTest_Y');
+const PCDLoader_01 = new PCDLoader();
+PCDLoader_01.load(
+	// resource URL
+	'/fbx/R02_0_0_01.pcd',
+	// called when the resource is loaded
+	function ( mesh ) {
+    mesh.geometry.center();
+    mesh.material = firefliesMaterial;
+    // firefliesMaterial.uniforms.uBBB = mesh.geometry.attributes.color;
+		scene.add( mesh );
+    console.log(mesh);
+    // gui.add(mesh.material, 'size').min(0).max(0.005).step(0.0001).name('SIZE');
+    
+	},
+	// called when loading has errors
+	function ( error ) {
+		console.log( 'An error happened' );
+	}
+);
 
 const mesh = new THREE.Mesh(geometry, firefliesMaterial);
 mesh.position.z = -10;
-scene.add(mesh);
+// scene.add(mesh);
 const mesh_sphere = new THREE.Mesh(geometry_sphere, firefliesMaterial);
 mesh_sphere.position.z = -2.5;
-scene.add(mesh_sphere);
+// scene.add(mesh_sphere);
 
-gui.add(mesh.position, 'x').min(-10).max(10).step(0.01).name('mesh_X');
-gui.add(mesh.position, 'y').min(-10).max(10).step(0.01).name('mesh_Y');
-gui.add(mesh.position, 'z').min(-10).max(10).step(0.01).name('mesh_Z');
-gui.add(mesh_sphere.position, 'x').min(-10).max(10).step(0.01).name('mesh_sphere_X');
-gui.add(mesh_sphere.position, 'y').min(-10).max(10).step(0.01).name('mesh_sphere_Y');
-gui.add(mesh_sphere.position, 'z').min(-10).max(10).step(0.01).name('mesh_sphere_Z');
+// gui.add(mesh.position, 'x').min(-10).max(10).step(0.01).name('mesh_X');
+// gui.add(mesh.position, 'y').min(-10).max(10).step(0.01).name('mesh_Y');
+// gui.add(mesh.position, 'z').min(-10).max(10).step(0.01).name('mesh_Z');
+// gui.add(mesh_sphere.position, 'x').min(-10).max(10).step(0.01).name('mesh_sphere_X');
+// gui.add(mesh_sphere.position, 'y').min(-10).max(10).step(0.01).name('mesh_sphere_Y');
+// gui.add(mesh_sphere.position, 'z').min(-10).max(10).step(0.01).name('mesh_sphere_Z');
 
 
 

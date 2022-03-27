@@ -2,6 +2,8 @@ uniform mat4 viewMatrixCamera;
 uniform mat4 projectionMatrixCamera;
 uniform mat4 modelMatrixCamera;
 uniform vec3 projPosition;
+uniform float uPixelRatio;
+uniform float uSize;
 
 attribute vec4 color;
 
@@ -15,15 +17,23 @@ varying vec4 vTexCoords;
 
 void main()
 {
-    vUv = uv;
-    vColor = color;
-    
-    vWorldSpaceNormal = modelMatrix * vec4(normal, 0.0);
-    vViewSpaceNormal = viewMatrix * modelMatrix * vec4(normal, 0.0);
+  vUv = uv;
+  vColor = color;
 
-    vNormal = mat3(modelMatrix) * normal;
-    vWorldPosition = modelMatrix * vec4(position, 1.0);
-    vTexCoords = projectionMatrixCamera * viewMatrixCamera * vWorldPosition;
-    
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  vWorldSpaceNormal = modelMatrix * vec4(normal, 0.0);
+  vViewSpaceNormal = viewMatrix * modelMatrix * vec4(normal, 0.0);
+
+  vNormal = mat3(modelMatrix) * normal;
+  vWorldPosition = modelMatrix * vec4(position, 1.0);
+  vTexCoords = projectionMatrixCamera * viewMatrixCamera * vWorldPosition;
+
+  // gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
+  vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+  vec4 viewPosition = viewMatrix * modelPosition;
+  vec4 projectionPosition = projectionMatrix * viewPosition;
+
+  gl_Position = projectionPosition;
+  gl_PointSize = uSize * uPixelRatio; //every point size
+  // gl_PointSize = uSize * uPixelRatio; //every point size
 }
