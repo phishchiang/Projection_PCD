@@ -8,6 +8,12 @@ import pointsFragmentShader from './shaders/points/fragment.glsl';
 import { RepeatWrapping, ClampToEdgeWrapping } from 'three';
 import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader.js';
 
+let video = document.getElementById( 'video' );
+// video.play();
+let videoTexture = new THREE.VideoTexture( video );
+// videoTexture.update();
+// console.log(video);
+
 /**
  * Base
  */
@@ -131,7 +137,7 @@ loader.load('/fbx/ball_uv.fbx', function (object) {
       child.receiveShadow = true;
     }
   });
-  scene.add(object);
+  // scene.add(object);
   object.scale.set(1, 1, 1);
   // object.translateZ = 10.0;
   object.children[0].material = firefliesMaterial;
@@ -140,18 +146,33 @@ loader.load('/fbx/ball_uv.fbx', function (object) {
   // console.log(object.children[0].geometry.attributes);
 });
 
+loader.load('/fbx/Test_0327_cam_fbx.fbx', function (object) {
+  scene.add(object);
+  // console.log(object.children);
+
+for (const element of object.children) {
+  const cam_geometry = new THREE.BoxGeometry(0.1, 0.5625, 1, 2, 2, 2);
+  const cam_mesh = new THREE.Mesh(cam_geometry, firefliesMaterial);
+  cam_mesh.position.set(element.position.x, element.position.y, element.position.z);
+  cam_mesh.rotation.set(element.rotation.x, element.rotation.y, element.rotation.z);
+  scene.add(cam_mesh);
+  console.log(element);
+}
+});
+
 const PCDLoader_01 = new PCDLoader();
 PCDLoader_01.load(
 	// resource URL
 	// '/fbx/R02_0_0_01.pcd',
-	'/fbx/Test_0327.pcd',
+	// '/fbx/Test_0327.pcd',
+	'/fbx/test_0327_02.pcd',
 	// called when the resource is loaded
 	function ( mesh ) {
     mesh.geometry.center();
     mesh.material = firefliesMaterial;
     // firefliesMaterial.uniforms.uBBB = mesh.geometry.attributes.color;
 		scene.add( mesh );
-    console.log(mesh);
+    // console.log(mesh);
     // gui.add(mesh.material, 'size').min(0).max(0.005).step(0.0001).name('SIZE');
     
 	},
