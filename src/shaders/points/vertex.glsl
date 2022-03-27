@@ -2,6 +2,7 @@ uniform mat4 viewMatrixCamera;
 uniform mat4 projectionMatrixCamera;
 uniform mat4 modelMatrixCamera;
 uniform vec3 projPosition;
+uniform vec2 uTestVec2;
 uniform float uPixelRatio;
 uniform float uSize;
 
@@ -34,5 +35,5 @@ void main()
 
   // gl_Position = projectionPosition;
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  gl_PointSize = uSize * uPixelRatio; //every point size
+  gl_PointSize = uSize * max( uTestVec2.x / gl_Position.w, 1.0) * 0.00005; //every point size
 }

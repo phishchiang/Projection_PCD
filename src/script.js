@@ -115,7 +115,7 @@ const firefliesMaterial = new THREE.ShaderMaterial({
   fragmentShader: pointsFragmentShader, 
 })
 
-gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'x').min(-100).max(100).step(0.01).name('uTest_X');
+gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'x').min(0).max(1000).step(0.01).name('uTest_X');
 gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'y').min(0).max(1).step(0.01).name('uTest_Y');
 
 const loader = new FBXLoader();

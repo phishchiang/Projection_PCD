@@ -1,5 +1,5 @@
 uniform float uTime;
-uniform float uTestVec2;
+uniform vec2 uTestVec2;
 uniform vec3 projPosition;
 uniform sampler2D uTexture;
 
@@ -27,5 +27,5 @@ void main()
   }
 
   // color.r += sin(  10.0 + uTestVec2.x ) * 0.5;
-  gl_FragColor = color;
+  gl_FragColor = vColor;
 }
