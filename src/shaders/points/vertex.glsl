@@ -27,13 +27,12 @@ void main()
   vWorldPosition = modelMatrix * vec4(position, 1.0);
   vTexCoords = projectionMatrixCamera * viewMatrixCamera * vWorldPosition;
 
-  // gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 
   vec4 modelPosition = modelMatrix * vec4(position, 1.0);
   vec4 viewPosition = viewMatrix * modelPosition;
   vec4 projectionPosition = projectionMatrix * viewPosition;
 
-  gl_Position = projectionPosition;
+  // gl_Position = projectionPosition;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   gl_PointSize = uSize * uPixelRatio; //every point size
-  // gl_PointSize = uSize * uPixelRatio; //every point size
 }

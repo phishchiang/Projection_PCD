@@ -30,6 +30,7 @@ const geometry_sphere = new THREE.SphereGeometry( 1, 64 , 32 );
 // Load Textures 
 const texture_map = new THREE.TextureLoader().load( '/textures/test.JPG' );
 texture_map.wrapS = texture_map.wrapT = RepeatWrapping
+texture_map.repeat.set( 16, 16 );
 
 
 
@@ -74,7 +75,7 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 0, 2.5);
 scene.add(camera);
 
-const projector = new THREE.PerspectiveCamera( 75, 1, 0.1,10000)
+const projector = new THREE.PerspectiveCamera( 75, 1, 0.1,10)
 projector.position.set(0, 10, 5)
 projector.lookAt(0, 0, 0)
 scene.add(projector);
@@ -139,7 +140,8 @@ loader.load('/fbx/ball_uv.fbx', function (object) {
 const PCDLoader_01 = new PCDLoader();
 PCDLoader_01.load(
 	// resource URL
-	'/fbx/R02_0_0_01.pcd',
+	// '/fbx/R02_0_0_01.pcd',
+	'/fbx/Test_0327.pcd',
 	// called when the resource is loaded
 	function ( mesh ) {
     mesh.geometry.center();

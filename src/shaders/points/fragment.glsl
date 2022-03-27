@@ -27,5 +27,5 @@ void main()
   }
 
   // color.r += sin(  10.0 + uTestVec2.x ) * 0.5;
-  gl_FragColor = vColor;
+  gl_FragColor = color;
 }

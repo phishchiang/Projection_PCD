@@ -98,7 +98,6 @@ Thumbs.db
 *.der
 *.key
 *.pem
-*.pcd
 
 # --------------------------------------------------------
 # BEGIN Explictly Allowed Files (i.e. do NOT ignore these)
