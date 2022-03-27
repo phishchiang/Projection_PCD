@@ -5,7 +5,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import * as dat from 'dat.gui';
 import pointsVertexShader from './shaders/points/vertex.glsl';
 import pointsFragmentShader from './shaders/points/fragment.glsl';
-import { RepeatWrapping } from 'three';
+import { RepeatWrapping, ClampToEdgeWrapping } from 'three';
 import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader.js';
 
 /**
@@ -29,7 +29,8 @@ const geometry_sphere = new THREE.SphereGeometry( 1, 64 , 32 );
 
 // Load Textures 
 const texture_map = new THREE.TextureLoader().load( '/textures/test.JPG' );
-texture_map.wrapS = texture_map.wrapT = RepeatWrapping
+// texture_map.wrapS = texture_map.wrapT = RepeatWrapping
+texture_map.wrapS = texture_map.wrapT = ClampToEdgeWrapping
 
 
 
@@ -75,7 +76,7 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 0, 2.5);
 scene.add(camera);
 
-const projector = new THREE.PerspectiveCamera( 10, 1, 0.1,10)
+const projector = new THREE.PerspectiveCamera( 45, 1, 0.1,10)
 projector.position.set(0, 10, 5)
 projector.lookAt(0, 0, 0)
 scene.add(projector);
@@ -162,7 +163,7 @@ PCDLoader_01.load(
 
 const mesh = new THREE.Mesh(geometry, firefliesMaterial);
 mesh.position.z = -1;
-scene.add(mesh);
+// scene.add(mesh);
 const mesh_sphere = new THREE.Mesh(geometry_sphere, firefliesMaterial);
 mesh_sphere.position.z = -2.5;
 // scene.add(mesh_sphere);
