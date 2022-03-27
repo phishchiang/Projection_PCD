@@ -30,7 +30,7 @@ const geometry_sphere = new THREE.SphereGeometry( 1, 64 , 32 );
 // Load Textures 
 const texture_map = new THREE.TextureLoader().load( '/textures/test.JPG' );
 texture_map.wrapS = texture_map.wrapT = RepeatWrapping
-texture_map.repeat.set( 16, 16 );
+
 
 
 
@@ -75,7 +75,7 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 0, 2.5);
 scene.add(camera);
 
-const projector = new THREE.PerspectiveCamera( 75, 1, 0.1,10)
+const projector = new THREE.PerspectiveCamera( 10, 1, 0.1,10)
 projector.position.set(0, 10, 5)
 projector.lookAt(0, 0, 0)
 scene.add(projector);
@@ -93,6 +93,8 @@ projector.updateWorldMatrix();
 const helper = new THREE.CameraHelper(projector);
 scene.add(helper);
 gui.add(projector.position, 'x').min(-100).max(100).step(0.01).name('Projector_X');
+gui.add(projector.position, 'y').min(-100).max(100).step(0.01).name('Projector_Y');
+gui.add(projector.position, 'z').min(-100).max(100).step(0.01).name('Projector_Z');
 
 
 
@@ -159,8 +161,8 @@ PCDLoader_01.load(
 );
 
 const mesh = new THREE.Mesh(geometry, firefliesMaterial);
-mesh.position.z = -10;
-// scene.add(mesh);
+mesh.position.z = -1;
+scene.add(mesh);
 const mesh_sphere = new THREE.Mesh(geometry_sphere, firefliesMaterial);
 mesh_sphere.position.z = -2.5;
 // scene.add(mesh_sphere);
