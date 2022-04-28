@@ -1,3 +1,5 @@
+precision highp float;
+
 uniform mat4 viewMatrixCamera;
 uniform mat4 projectionMatrixCamera;
 uniform mat4 modelMatrixCamera;
@@ -39,6 +41,6 @@ void main()
 
   // gl_Position = projectionPosition;
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  gl_PointSize = uSize * max( uTestVec2.x / gl_Position.w, 1.0) * 0.0001; //every point size
+  gl_PointSize = uSize * max( uTestVec2.x / gl_Position.w, 1.0) * 0.02; //every point size
   vTexCoords_02 = gl_Position;
 }

@@ -1,3 +1,5 @@
+precision highp float;
+
 uniform float uTime;
 uniform vec2 uTestVec2;
 uniform vec3 projPosition;
