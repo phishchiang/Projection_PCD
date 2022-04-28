@@ -15,6 +15,7 @@ varying vec4 vViewSpaceNormal;
 varying vec3 vNormal;
 varying vec4 vWorldPosition;
 varying vec4 vTexCoords;
+varying vec4 vTexCoords_02;
 
 void main()
 {
@@ -23,8 +24,11 @@ void main()
 
   vWorldSpaceNormal = modelMatrix * vec4(normal, 0.0);
   vViewSpaceNormal = viewMatrix * modelMatrix * vec4(normal, 0.0);
+  // vViewSpaceNormal = normalize(viewMatrix * modelMatrix * vec4(normal, 0.0));
 
-  vNormal = mat3(modelMatrix) * normal;
+  // vNormal = mat3(modelMatrix) * normal;
+  // vNormal = normalMatrix * normal;
+  vNormal = normal;
   vWorldPosition = modelMatrix * vec4(position, 1.0);
   vTexCoords = projectionMatrixCamera * viewMatrixCamera * vWorldPosition;
 
@@ -35,5 +39,6 @@ void main()
 
   // gl_Position = projectionPosition;
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  gl_PointSize = uSize * max( uTestVec2.x / gl_Position.w, 1.0) * 0.00005; //every point size
+  gl_PointSize = uSize * max( uTestVec2.x / gl_Position.w, 1.0) * 0.0001; //every point size
+  vTexCoords_02 = gl_Position;
 }

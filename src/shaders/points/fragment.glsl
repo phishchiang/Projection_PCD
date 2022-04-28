@@ -10,6 +10,7 @@ varying vec4 vViewSpaceNormal;
 varying vec3 vNormal;
 varying vec4 vWorldPosition;
 varying vec4 vTexCoords;
+varying vec4 vTexCoords_02;
 
 void main()
 {
@@ -27,7 +28,7 @@ void main()
   //  clamp y
   color *= smoothstep(0.0, fade, uv.y) * (1.0 - smoothstep(1.0 - fade, 1.0, uv.y));
 
-  color += vec4(vColor);
+  // color += vec4(vColor);
   /*
   // this makes sure we don't render the texture also on the back of the object
   vec3 projectorDirection = normalize(projPosition - vWorldPosition.xyz);
@@ -36,7 +37,11 @@ void main()
     color = vec4(vColor);
   }
   */
+  color = texture2D(uTexture, gl_PointCoord );
+  color *= vec4(vColor);
+  // color = vec4(vColor);
 
   // color.r += sin(  10.0 + uTestVec2.x ) * 0.5;
+  // gl_FragColor = vec4(vec3(vNormal), 1.0);;
   gl_FragColor = color;
 }

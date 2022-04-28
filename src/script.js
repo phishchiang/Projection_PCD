@@ -34,7 +34,8 @@ const geometry = new THREE.BoxGeometry(10, 5, 10, 32, 64, 64);
 const geometry_sphere = new THREE.SphereGeometry( 1, 64 , 32 );
 
 // Load Textures 
-const texture_map = new THREE.TextureLoader().load( '/textures/test.JPG' );
+// const texture_map = new THREE.TextureLoader().load( '/textures/test.JPG' );
+const texture_map = new THREE.TextureLoader().load( '/textures/map.png' );
 // texture_map.wrapS = texture_map.wrapT = RepeatWrapping
 texture_map.wrapS = texture_map.wrapT = ClampToEdgeWrapping
 
@@ -79,7 +80,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.set(0, 0, 2.5);
+camera.position.set(-1.2, 1.6, 6.5);
 scene.add(camera);
 
 const projector = new THREE.PerspectiveCamera( 45, 1, 0.1,10)
@@ -91,6 +92,7 @@ const viewMatrixCamera = projector.matrixWorldInverse
 const projectionMatrixCamera = projector.projectionMatrix;
 const modelMatrixCamera = projector.matrixWorld
 const projPosition = projector.position
+
 
 console.log(projector);
 projector.updateProjectionMatrix();
@@ -122,6 +124,10 @@ const firefliesMaterial = new THREE.ShaderMaterial({
   // blending: THREE.AdditiveBlending,
   vertexShader: pointsVertexShader,
   fragmentShader: pointsFragmentShader, 
+  transparent: true,
+  blending: THREE.AdditiveBlending,
+  alphaTest: 0.5,
+  depthWrite: false,
 })
 
 gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'x').min(0).max(1000).step(0.01).name('uTest_X');
@@ -129,7 +135,7 @@ gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'y').min(0).max(1).step(0.01
 
 const loader = new FBXLoader();
 
-loader.load('/fbx/ball_uv.fbx', function (object) {
+loader.load('/fbx/MSH_Arrow.fbx', function (object) {
 
   object.traverse(function (child) {
     if (child.isMesh) {
@@ -144,6 +150,16 @@ loader.load('/fbx/ball_uv.fbx', function (object) {
   object.position.z = 5;
   // console.log(object);
   // console.log(object.children[0].geometry.attributes);
+  // gui.add(object.position, 'x').min(-10).max(10).step(0.01).name('object_X');
+  // gui.add(object.position, 'y').min(-10).max(10).step(0.01).name('object_Y');
+  // gui.add(object.position, 'z').min(-10).max(10).step(0.01).name('object_Z');
+  // gui.add(object.rotation, 'x').min(-Math.PI).max(Math.PI).step(0.01).name('object_Rotate_X');
+  // gui.add(object.rotation, 'y').min(-Math.PI).max(Math.PI).step(0.01).name('object_Rotate_Y');
+  // gui.add(object.rotation, 'z').min(-Math.PI).max(Math.PI).step(0.01).name('object_Rotate_Z');
+  // gui.add(object.scale, 'x').min(0.1).max(1).step(0.01).name('object_Scale_X');
+  // gui.add(object.scale, 'y').min(0.1).max(1).step(0.01).name('object_Scale_Y');
+  // gui.add(object.scale, 'z').min(0.1).max(1).step(0.01).name('object_Scale_Z');
+
 });
 
 loader.load('/fbx/Test_0327_cam_fbx.fbx', function (object) {
@@ -156,7 +172,7 @@ for (const element of object.children) {
   cam_mesh.position.set(element.position.x, element.position.y, element.position.z);
   cam_mesh.rotation.set(element.rotation.x, element.rotation.y, element.rotation.z);
   scene.add(cam_mesh);
-  console.log(element);
+  // console.log(element);
 }
 });
 
@@ -168,11 +184,13 @@ PCDLoader_01.load(
 	'/fbx/test_0327_02.pcd',
 	// called when the resource is loaded
 	function ( mesh ) {
+    // const geometry_PCD = new THREE.SphereGeometry( 0.1, 8 , 8 );
+    // mesh.geometry = geometry_PCD;
     mesh.geometry.center();
     mesh.material = firefliesMaterial;
     // firefliesMaterial.uniforms.uBBB = mesh.geometry.attributes.color;
 		scene.add( mesh );
-    // console.log(mesh);
+    console.log(mesh);
     // gui.add(mesh.material, 'size').min(0).max(0.005).step(0.0001).name('SIZE');
     
 	},
@@ -187,20 +205,20 @@ mesh.position.z = -1;
 // scene.add(mesh);
 const mesh_sphere = new THREE.Mesh(geometry_sphere, firefliesMaterial);
 mesh_sphere.position.z = -2.5;
+mesh_sphere.scale.z = 1.5;
 // scene.add(mesh_sphere);
 
 // gui.add(mesh.position, 'x').min(-10).max(10).step(0.01).name('mesh_X');
 // gui.add(mesh.position, 'y').min(-10).max(10).step(0.01).name('mesh_Y');
 // gui.add(mesh.position, 'z').min(-10).max(10).step(0.01).name('mesh_Z');
-// gui.add(mesh_sphere.position, 'x').min(-10).max(10).step(0.01).name('mesh_sphere_X');
-// gui.add(mesh_sphere.position, 'y').min(-10).max(10).step(0.01).name('mesh_sphere_Y');
-// gui.add(mesh_sphere.position, 'z').min(-10).max(10).step(0.01).name('mesh_sphere_Z');
 
 
 
 // Controls
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
+controls.panSpeed = 0;
+controls.zoomSpeed = 0;
 
 
 /**
