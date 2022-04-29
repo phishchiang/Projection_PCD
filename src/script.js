@@ -16,6 +16,8 @@ THREE.DefaultLoadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) 
 THREE.DefaultLoadingManager.onLoad = function ( ) {
   loadingScreen.classList.add( 'fade-out' );
 	console.log( 'Loading Complete!');
+  // optional: remove loader from DOM via event listener
+  loadingScreen.addEventListener( 'transitionend', onTransitionEnd );
 };
 
 
@@ -207,5 +209,9 @@ const tick = () => {
   const elapsedTime = clock.getElapsedTime();
   firefliesMaterial.uniforms.uTime.value = elapsedTime;
 };
+
+function onTransitionEnd( event ) {
+	event.target.remove();
+}
 
 tick();
