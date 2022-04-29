@@ -8,11 +8,11 @@ import pointsFragmentShader from './shaders/points/fragment.glsl';
 import { RepeatWrapping, ClampToEdgeWrapping } from 'three';
 import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader.js';
 
-let video = document.getElementById( 'video' );
-// video.play();
-let videoTexture = new THREE.VideoTexture( video );
-// videoTexture.update();
-// console.log(video);
+
+
+const fbx_path_01 = '/fbx/Test_0327_cam_fbx.fbx';
+const fbx_path_02 = '/fbx/ball_uv.fbx';
+const pcb_path_01 = '/fbx/test_0327_02.pcd';
 
 /**
  * Base
@@ -130,12 +130,12 @@ const firefliesMaterial = new THREE.ShaderMaterial({
   depthWrite: false,
 })
 
-gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'x').min(0).max(1000).step(0.01).name('uTest_X');
+gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'x').min(0).max(50).step(0.01).name('uTest_X');
 gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'y').min(0).max(1).step(0.01).name('uTest_Y');
 
 const loader = new FBXLoader();
 
-loader.load('/fbx/MSH_Arrow.fbx', function (object) {
+loader.load(fbx_path_02, function (object) {
 
   object.traverse(function (child) {
     if (child.isMesh) {
@@ -143,7 +143,7 @@ loader.load('/fbx/MSH_Arrow.fbx', function (object) {
       child.receiveShadow = true;
     }
   });
-  // scene.add(object);
+  scene.add(object);
   object.scale.set(1, 1, 1);
   // object.translateZ = 10.0;
   object.children[0].material = firefliesMaterial;
@@ -162,7 +162,7 @@ loader.load('/fbx/MSH_Arrow.fbx', function (object) {
 
 });
 
-loader.load('/fbx/Test_0327_cam_fbx.fbx', function (object) {
+loader.load(fbx_path_01, function (object) {
   scene.add(object);
   // console.log(object.children);
 
@@ -181,7 +181,7 @@ PCDLoader_01.load(
 	// resource URL
 	// '/fbx/R02_0_0_01.pcd',
 	// '/fbx/Test_0327.pcd',
-	'/fbx/test_0327_02.pcd',
+	pcb_path_01,
 	// called when the resource is loaded
 	function ( mesh ) {
     // const geometry_PCD = new THREE.SphereGeometry( 0.1, 8 , 8 );
@@ -218,7 +218,7 @@ mesh_sphere.scale.z = 1.5;
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.panSpeed = 0;
-controls.zoomSpeed = 0;
+// controls.zoomSpeed = 0;
 
 
 /**
