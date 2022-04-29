@@ -11,7 +11,11 @@ import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader.js';
 
 
 const fbx_path_01 = '/fbx/Test_0327_cam_fbx.fbx';
+// const fbx_path_01 = 'https://cdn.glitch.global/23e39636-fbea-4708-9a34-6b7c0195b95e/Test_0327_cam_fbx.fbx?v=1651216678040';
 const fbx_path_02 = '/fbx/ball_uv.fbx';
+// const fbx_path_02 = 'https://cdn.glitch.global/23e39636-fbea-4708-9a34-6b7c0195b95e/ball_uv.fbx?v=1651216684933';
+const pcd_path_01 = '/fbx/test_0327_02.pcd';
+// const pcd_path_01 = 'https://cdn.glitch.global/23e39636-fbea-4708-9a34-6b7c0195b95e/test_0327_02.pcd?v=1651216666718';
 
 /**
  * Base
@@ -134,8 +138,8 @@ gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'y').min(0).max(1).step(0.01
 
 const loader = new FBXLoader();
 
-loader.setPath('/fbx/');
-loader.load('ball_uv.fbx', function (object) {
+
+loader.load(fbx_path_02, function (object) {
 
   object.traverse(function (child) {
     if (child.isMesh) {
@@ -162,7 +166,7 @@ loader.load('ball_uv.fbx', function (object) {
 
 });
 
-loader.load('Test_0327_cam_fbx.fbx', function (object) {
+loader.load(fbx_path_01, function (object) {
   scene.add(object);
   // console.log(object.children);
 
@@ -175,15 +179,14 @@ for (const element of object.children) {
   // console.log(element);
 }
 });
-const pcb_path_01 = '/fbx/test_0327_02.pcd';
+
 const PCDLoader_01 = new PCDLoader();
-PCDLoader_01.setPath('/fbx/');
 
 PCDLoader_01.load(
 	// resource URL
 	// '/fbx/R02_0_0_01.pcd',
 	// '/fbx/Test_0327.pcd',
-  'test_0327_02.pcd',
+  pcd_path_01,
 	// called when the resource is loaded
 	function ( mesh ) {
     // const geometry_PCD = new THREE.SphereGeometry( 0.1, 8 , 8 );
