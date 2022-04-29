@@ -10,12 +10,8 @@ import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader.js';
 
 
 
-const fbx_path_01 = '/fbx/Test_0327_cam_fbx.fbx';
-// const fbx_path_01 = 'https://cdn.glitch.global/23e39636-fbea-4708-9a34-6b7c0195b95e/Test_0327_cam_fbx.fbx?v=1651216678040';
-const fbx_path_02 = '/fbx/ball_uv.fbx';
-// const fbx_path_02 = 'https://cdn.glitch.global/23e39636-fbea-4708-9a34-6b7c0195b95e/ball_uv.fbx?v=1651216684933';
-const pcd_path_01 = '/fbx/test_0327_02.pcd';
-// const pcd_path_01 = 'https://cdn.glitch.global/23e39636-fbea-4708-9a34-6b7c0195b95e/test_0327_02.pcd?v=1651216666718';
+const fbx_path_01 = './fbx/Test_0327_cam_fbx.fbx';
+const pcd_path_01 = './fbx/42402_96k_pcd.pcd';
 
 /**
  * Base
@@ -37,9 +33,7 @@ const geometry = new THREE.BoxGeometry(10, 5, 10, 32, 64, 64);
 const geometry_sphere = new THREE.SphereGeometry( 1, 64 , 32 );
 
 // Load Textures 
-// const texture_map = new THREE.TextureLoader().load( '/textures/test.JPG' );
-const texture_map = new THREE.TextureLoader().load( '/textures/map.png' );
-// texture_map.wrapS = texture_map.wrapT = RepeatWrapping
+const texture_map = new THREE.TextureLoader().load( './textures/map.png' );
 texture_map.wrapS = texture_map.wrapT = ClampToEdgeWrapping
 
 
@@ -83,32 +77,9 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.set(-1.2, 1.6, 6.5);
+camera.position.set(-300, 35, -150);
+// camera.position.set(-1.2, 1.6, 6.5);
 scene.add(camera);
-
-const projector = new THREE.PerspectiveCamera( 45, 1, 0.1,10)
-projector.position.set(0, 10, 5)
-projector.lookAt(0, 0, 0)
-scene.add(projector);
-
-const viewMatrixCamera = projector.matrixWorldInverse
-const projectionMatrixCamera = projector.projectionMatrix;
-const modelMatrixCamera = projector.matrixWorld
-const projPosition = projector.position
-
-
-console.log(projector);
-projector.updateProjectionMatrix();
-projector.updateMatrixWorld();
-projector.updateWorldMatrix();
-
-const helper = new THREE.CameraHelper(projector);
-scene.add(helper);
-gui.add(projector.position, 'x').min(-100).max(100).step(0.01).name('Projector_X');
-gui.add(projector.position, 'y').min(-100).max(100).step(0.01).name('Projector_Y');
-gui.add(projector.position, 'z').min(-100).max(100).step(0.01).name('Projector_Z');
-
-
 
 
 
@@ -119,10 +90,6 @@ const firefliesMaterial = new THREE.ShaderMaterial({
     uTime: { value: 0 },
     uTestVec2: { value: new THREE.Vector2(1, 0) },
     uTexture: { value: texture_map },
-    viewMatrixCamera: { value: viewMatrixCamera },
-    projectionMatrixCamera: { value: projectionMatrixCamera },
-    modelMatrixCamera: { value: modelMatrixCamera },
-    projPosition: { value: projPosition },
   },
   // blending: THREE.AdditiveBlending,
   vertexShader: pointsVertexShader,
@@ -133,49 +100,20 @@ const firefliesMaterial = new THREE.ShaderMaterial({
   depthWrite: false,
 })
 
-gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'x').min(0).max(50).step(0.01).name('uTest_X');
-gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'y').min(0).max(1).step(0.01).name('uTest_Y');
+gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'x').min(0).max(10000).step(0.01).name('uTest_X');
+// gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'y').min(0).max(1).step(0.01).name('uTest_Y');
 
 const loader = new FBXLoader();
-
-
-loader.load(fbx_path_02, function (object) {
-
-  object.traverse(function (child) {
-    if (child.isMesh) {
-      child.castShadow = true;
-      child.receiveShadow = true;
-    }
-  });
-  scene.add(object);
-  object.scale.set(1, 1, 1);
-  // object.translateZ = 10.0;
-  object.children[0].material = firefliesMaterial;
-  object.position.z = 5;
-  // console.log(object);
-  // console.log(object.children[0].geometry.attributes);
-  // gui.add(object.position, 'x').min(-10).max(10).step(0.01).name('object_X');
-  // gui.add(object.position, 'y').min(-10).max(10).step(0.01).name('object_Y');
-  // gui.add(object.position, 'z').min(-10).max(10).step(0.01).name('object_Z');
-  // gui.add(object.rotation, 'x').min(-Math.PI).max(Math.PI).step(0.01).name('object_Rotate_X');
-  // gui.add(object.rotation, 'y').min(-Math.PI).max(Math.PI).step(0.01).name('object_Rotate_Y');
-  // gui.add(object.rotation, 'z').min(-Math.PI).max(Math.PI).step(0.01).name('object_Rotate_Z');
-  // gui.add(object.scale, 'x').min(0.1).max(1).step(0.01).name('object_Scale_X');
-  // gui.add(object.scale, 'y').min(0.1).max(1).step(0.01).name('object_Scale_Y');
-  // gui.add(object.scale, 'z').min(0.1).max(1).step(0.01).name('object_Scale_Z');
-
-});
 
 loader.load(fbx_path_01, function (object) {
   scene.add(object);
   // console.log(object.children);
-
 for (const element of object.children) {
   const cam_geometry = new THREE.BoxGeometry(0.1, 0.5625, 1, 2, 2, 2);
   const cam_mesh = new THREE.Mesh(cam_geometry, firefliesMaterial);
   cam_mesh.position.set(element.position.x, element.position.y, element.position.z);
   cam_mesh.rotation.set(element.rotation.x, element.rotation.y, element.rotation.z);
-  scene.add(cam_mesh);
+  // scene.add(cam_mesh);
   // console.log(element);
 }
 });
@@ -183,21 +121,24 @@ for (const element of object.children) {
 const PCDLoader_01 = new PCDLoader();
 
 PCDLoader_01.load(
-	// resource URL
-	// '/fbx/R02_0_0_01.pcd',
-	// '/fbx/Test_0327.pcd',
   pcd_path_01,
 	// called when the resource is loaded
 	function ( mesh ) {
     // const geometry_PCD = new THREE.SphereGeometry( 0.1, 8 , 8 );
     // mesh.geometry = geometry_PCD;
+    let rot = {x:0,x:0,z:0};
     mesh.geometry.center();
+    mesh.rotation.x = -1.3107;
+    mesh.rotation.y = 0.0667;
+    mesh.rotation.z = 0;
     mesh.material = firefliesMaterial;
     // firefliesMaterial.uniforms.uBBB = mesh.geometry.attributes.color;
 		scene.add( mesh );
     console.log(mesh);
+    gui.add(mesh.rotation, 'x').min(-Math.PI).max(Math.PI).step(0.0001).name('Rot_X');
+    gui.add(mesh.rotation, 'y').min(-Math.PI).max(Math.PI).step(0.0001).name('Rot_Y');
+    gui.add(mesh.rotation, 'z').min(-Math.PI).max(Math.PI).step(0.0001).name('Rot_Z');
     // gui.add(mesh.material, 'size').min(0).max(0.005).step(0.0001).name('SIZE');
-    
 	},
 	// called when loading has errors
 	function ( error ) {
@@ -212,10 +153,6 @@ const mesh_sphere = new THREE.Mesh(geometry_sphere, firefliesMaterial);
 mesh_sphere.position.z = -2.5;
 mesh_sphere.scale.z = 1.5;
 // scene.add(mesh_sphere);
-
-// gui.add(mesh.position, 'x').min(-10).max(10).step(0.01).name('mesh_X');
-// gui.add(mesh.position, 'y').min(-10).max(10).step(0.01).name('mesh_Y');
-// gui.add(mesh.position, 'z').min(-10).max(10).step(0.01).name('mesh_Z');
 
 
 
