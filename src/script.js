@@ -8,7 +8,24 @@ import pointsFragmentShader from './shaders/points/fragment.glsl';
 import { RepeatWrapping, ClampToEdgeWrapping } from 'three';
 import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader.js';
 
+const loadingScreen = document.getElementById( 'loading-screen' );
+THREE.DefaultLoadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+	console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+};
 
+THREE.DefaultLoadingManager.onLoad = function ( ) {
+  loadingScreen.classList.add( 'fade-out' );
+	console.log( 'Loading Complete!');
+};
+
+
+THREE.DefaultLoadingManager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+	console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+};
+
+THREE.DefaultLoadingManager.onError = function ( url ) {
+	console.log( 'There was an error loading ' + url );
+};
 
 const fbx_path_01 = './fbx/Test_0327_cam_fbx.fbx';
 const pcd_path_01 = './fbx/42402_96k_pcd.pcd';
