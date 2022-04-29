@@ -12,7 +12,6 @@ import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader.js';
 
 const fbx_path_01 = '/fbx/Test_0327_cam_fbx.fbx';
 const fbx_path_02 = '/fbx/ball_uv.fbx';
-const pcb_path_01 = '/fbx/test_0327_02.pcd';
 
 /**
  * Base
@@ -135,7 +134,8 @@ gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'y').min(0).max(1).step(0.01
 
 const loader = new FBXLoader();
 
-loader.load(fbx_path_02, function (object) {
+loader.setPath('/fbx/');
+loader.load('ball_uv.fbx', function (object) {
 
   object.traverse(function (child) {
     if (child.isMesh) {
@@ -162,7 +162,7 @@ loader.load(fbx_path_02, function (object) {
 
 });
 
-loader.load(fbx_path_01, function (object) {
+loader.load('Test_0327_cam_fbx.fbx', function (object) {
   scene.add(object);
   // console.log(object.children);
 
@@ -175,13 +175,15 @@ for (const element of object.children) {
   // console.log(element);
 }
 });
-
+const pcb_path_01 = '/fbx/test_0327_02.pcd';
 const PCDLoader_01 = new PCDLoader();
+PCDLoader_01.setPath('/fbx/');
+
 PCDLoader_01.load(
 	// resource URL
 	// '/fbx/R02_0_0_01.pcd',
 	// '/fbx/Test_0327.pcd',
-	pcb_path_01,
+  'test_0327_02.pcd',
 	// called when the resource is loaded
 	function ( mesh ) {
     // const geometry_PCD = new THREE.SphereGeometry( 0.1, 8 , 8 );
