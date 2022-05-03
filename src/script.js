@@ -210,6 +210,8 @@ loader.load(fbx_path_01, function (object) {
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.panSpeed = 0;
+controls.minDistance = 5;
+controls.maxDistance = 12;
 // controls.zoomSpeed = 0;
 
 
