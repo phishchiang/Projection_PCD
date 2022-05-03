@@ -10,6 +10,7 @@ import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+// import { FXAAShader } from './jsm/shaders/FXAAShader.js';
 
 const loadingScreen = document.getElementById( 'loading-screen' );
 THREE.DefaultLoadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
@@ -39,7 +40,7 @@ const pcd_path_01 = './fbx/42402_96k_pcd.pcd';
  * Base
  */
 // Debug
-const gui = new dat.GUI();
+// const gui = new dat.GUI();
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl');
@@ -130,7 +131,7 @@ const firefliesMaterial = new THREE.ShaderMaterial({
   depthWrite: false,
 })
 
-gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'x').min(0).max(10000).step(0.01).name('uTest_X');
+// gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'x').min(0).max(10000).step(0.01).name('uTest_X');
 // gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'y').min(0).max(1).step(0.01).name('uTest_Y');
 
 // Lighting
@@ -150,20 +151,21 @@ dirLight_rim.position.multiplyScalar( 30 );
 scene.add( dirLight_rim );
 
 
-const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.25 );
+const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.95 );
 hemiLight.color.setHSL( 0.6, 1, 0.6 );
 hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
 hemiLight.position.set( 0, 50, 0 );
 scene.add( hemiLight );
 
-const dirLight_fill = new THREE.DirectionalLight( 0xffffff, 0.15 );
+const dirLight_fill = new THREE.DirectionalLight( 0xffffff, 0.05 );
 dirLight_fill.color.setHSL( 0.55, 1, 0.85 );
-dirLight_fill.position.set( 3, 0.15, 2 );
-dirLight_fill.position.multiplyScalar( 30 );
+dirLight_fill.position.set( 3, 5.5, 15 );
+// dirLight_fill.position.multiplyScalar( 30 );
 scene.add( dirLight_fill );
 
-// const helper = new THREE.DirectionalLightHelper( dirLight_fill, 5 );
-// scene.add( helper );
+
+// const rectLightHelper = new THREE.DirectionalLightHelper( dirLight_fill, 5 );
+// scene.add( rectLightHelper );
 
 
 // FBX Materials
@@ -228,9 +230,9 @@ PCDLoader_01.load(
     // firefliesMaterial.uniforms.uBBB = mesh.geometry.attributes.color;
 		// scene.add( mesh );
     console.log(mesh);
-    gui.add(mesh.rotation, 'x').min(-Math.PI).max(Math.PI).step(0.0001).name('Rot_X');
-    gui.add(mesh.rotation, 'y').min(-Math.PI).max(Math.PI).step(0.0001).name('Rot_Y');
-    gui.add(mesh.rotation, 'z').min(-Math.PI).max(Math.PI).step(0.0001).name('Rot_Z');
+    // gui.add(mesh.rotation, 'x').min(-Math.PI).max(Math.PI).step(0.0001).name('Rot_X');
+    // gui.add(mesh.rotation, 'y').min(-Math.PI).max(Math.PI).step(0.0001).name('Rot_Y');
+    // gui.add(mesh.rotation, 'z').min(-Math.PI).max(Math.PI).step(0.0001).name('Rot_Z');
     // gui.add(mesh.material, 'size').min(0).max(0.005).step(0.0001).name('SIZE');
 	},
 	// called when loading has errors
@@ -261,9 +263,18 @@ controls.panSpeed = 0;
  */
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
+  // antialias: true,
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+const renderScene = new RenderPass( scene, camera );
+
+const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 0.12, 0.32, 0.6 );
+
+let composer = new EffectComposer( renderer );
+composer.addPass( renderScene );
+composer.addPass( bloomPass );
 
 /**
  * Animate
@@ -275,7 +286,8 @@ const tick = () => {
   controls.update();
 
   // Render
-  renderer.render(scene, camera);
+  // renderer.render(scene, camera);
+  composer.render(scene, camera);
 
   // Call tick again on the next frame
   window.requestAnimationFrame(tick);
