@@ -3,9 +3,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import * as dat from 'dat.gui';
-import pointsVertexShader from './shaders/points/vertex.glsl';
-import pointsFragmentShader from './shaders/points/fragment.glsl';
-import { RepeatWrapping, ClampToEdgeWrapping } from 'three';
+// import pointsVertexShader from './shaders/points/vertex.glsl';
+// import pointsFragmentShader from './shaders/points/fragment.glsl';
 import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
@@ -58,8 +57,6 @@ const geometry = new THREE.BoxGeometry(10, 5, 10, 32, 64, 64);
 const geometry_sphere = new THREE.SphereGeometry( 1, 64 , 32 );
 
 // Load Textures 
-const texture_map = new THREE.TextureLoader().load( './textures/map.png' );
-texture_map.wrapS = texture_map.wrapT = ClampToEdgeWrapping
 const T_match_out_Color = new THREE.TextureLoader().load( './textures/T_Matchbox_Out_Base_color.png' );
 const T_match_out_Roughness = new THREE.TextureLoader().load( './textures/T_Matchbox_Out_Roughness.png' );
 const T_match_out_Normal = new THREE.TextureLoader().load( './textures/T_Matchbox_Out_Normal_OpenGL.png' );
@@ -114,25 +111,6 @@ scene.add(camera);
 
 
 
-const firefliesMaterial = new THREE.ShaderMaterial({
-  uniforms:
-  {
-    uSize: { value: 100 },
-    uTime: { value: 0 },
-    uTestVec2: { value: new THREE.Vector2(1, 0) },
-    uTexture: { value: texture_map },
-  },
-  // blending: THREE.AdditiveBlending,
-  vertexShader: pointsVertexShader,
-  fragmentShader: pointsFragmentShader, 
-  transparent: true,
-  blending: THREE.AdditiveBlending,
-  alphaTest: 0.5,
-  depthWrite: false,
-})
-
-// gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'x').min(0).max(10000).step(0.01).name('uTest_X');
-// gui.add(firefliesMaterial.uniforms.uTestVec2.value, 'y').min(0).max(1).step(0.01).name('uTest_Y');
 
 // Lighting
 
@@ -183,18 +161,6 @@ const PBR_Material_out = new THREE.MeshStandardMaterial({
 
 const loader = new FBXLoader();
 
-loader.load(fbx_path_01, function (object) {
-  // scene.add(object);
-  // console.log(object.children);
-for (const element of object.children) {
-  const cam_geometry = new THREE.BoxGeometry(0.1, 0.5625, 1, 2, 2, 2);
-  const cam_mesh = new THREE.Mesh(cam_geometry, firefliesMaterial);
-  cam_mesh.position.set(element.position.x, element.position.y, element.position.z);
-  cam_mesh.rotation.set(element.rotation.x, element.rotation.y, element.rotation.z);
-  // scene.add(cam_mesh);
-  // console.log(element);
-}
-});
 
 loader.load(fbx_path_01, function (object) {
 
@@ -206,48 +172,12 @@ loader.load(fbx_path_01, function (object) {
   });
   scene.add(object);
   // object.translateZ = 10.0;
-  // object.children[0].material = firefliesMaterial;
   object.children[0].material = PBR_Material_in;
   object.children[1].material = PBR_Material_out;
   // object.rotation.set(0, Math.PI , 0);
   console.log(object);
 });
 
-const PCDLoader_01 = new PCDLoader();
-
-PCDLoader_01.load(
-  pcd_path_01,
-	// called when the resource is loaded
-	function ( mesh ) {
-    // const geometry_PCD = new THREE.SphereGeometry( 0.1, 8 , 8 );
-    // mesh.geometry = geometry_PCD;
-    let rot = {x:0,x:0,z:0};
-    mesh.geometry.center();
-    mesh.rotation.x = -1.3107;
-    mesh.rotation.y = 0.0667;
-    mesh.rotation.z = 0;
-    mesh.material = firefliesMaterial;
-    // firefliesMaterial.uniforms.uBBB = mesh.geometry.attributes.color;
-		// scene.add( mesh );
-    console.log(mesh);
-    // gui.add(mesh.rotation, 'x').min(-Math.PI).max(Math.PI).step(0.0001).name('Rot_X');
-    // gui.add(mesh.rotation, 'y').min(-Math.PI).max(Math.PI).step(0.0001).name('Rot_Y');
-    // gui.add(mesh.rotation, 'z').min(-Math.PI).max(Math.PI).step(0.0001).name('Rot_Z');
-    // gui.add(mesh.material, 'size').min(0).max(0.005).step(0.0001).name('SIZE');
-	},
-	// called when loading has errors
-	function ( error ) {
-		console.log( 'An error happened' );
-	}
-);
-
-const mesh = new THREE.Mesh(geometry, firefliesMaterial);
-mesh.position.z = -1;
-// scene.add(mesh);
-const mesh_sphere = new THREE.Mesh(geometry_sphere, firefliesMaterial);
-mesh_sphere.position.z = -2.5;
-mesh_sphere.scale.z = 1.5;
-// scene.add(mesh_sphere);
 
 
 
@@ -293,7 +223,6 @@ const tick = () => {
   window.requestAnimationFrame(tick);
 
   const elapsedTime = clock.getElapsedTime();
-  firefliesMaterial.uniforms.uTime.value = elapsedTime;
 };
 
 function onTransitionEnd( event ) {
