@@ -57,7 +57,7 @@ const geometry = new THREE.BoxGeometry(10, 5, 10, 32, 64, 64);
 const geometry_sphere = new THREE.SphereGeometry( 1, 64 , 32 );
 
 // Load Textures 
-const T_match_out_Color = new THREE.TextureLoader().load( './textures/T_Matchbox_Out_Base_color.png' );
+const T_match_out_Color = new THREE.TextureLoader().load( './textures/T_Matchbox_Out_04_Base_color.png' );
 const T_match_out_Roughness = new THREE.TextureLoader().load( './textures/T_Matchbox_Out_Roughness.png' );
 const T_match_out_Normal = new THREE.TextureLoader().load( './textures/T_Matchbox_Out_Normal_OpenGL.png' );
 const T_match_in_Color = new THREE.TextureLoader().load( './textures/T_Matchbox_In_Base_color.png' );
@@ -114,7 +114,7 @@ scene.add(camera);
 
 // Lighting
 
-const dirLight = new THREE.DirectionalLight( 0xffffff, 1 );
+const dirLight = new THREE.DirectionalLight( 0xffffff, 0.70 );
 dirLight.color.setHSL( 0.12, 1, 0.85 );
 dirLight.position.set( 1, 1.75, -1 );
 dirLight.position.multiplyScalar( 30 );
@@ -129,7 +129,7 @@ dirLight_rim.position.multiplyScalar( 30 );
 scene.add( dirLight_rim );
 
 
-const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.8 );
+const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
 hemiLight.color.setHSL( 0.05, 0.5, 0.85 );
 hemiLight.groundColor.setHSL( 0.55, 1, 0.75 );
 hemiLight.position.set( 0, 50, 0 );
