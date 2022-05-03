@@ -34,7 +34,7 @@ THREE.DefaultLoadingManager.onError = function ( url ) {
 
 const fbx_path_01 = './fbx/MSH_Matchbox.fbx';
 const pcd_path_01 = './fbx/42402_96k_pcd.pcd';
-let fxaaPass, composer, smaaPass;
+let fxaaPass, composer, smaaPass, currentIndex;
 
 /**
  * Base
@@ -102,20 +102,19 @@ window.addEventListener('resize', () => {
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
-let currentIndex = 0;
-
+currentIndex = 0;
 window.addEventListener('click', (event) => {
   event.preventDefault();
   // console.log(`${PBR_Material_out.map}_${currentIndex}`);
-  PBR_Material_out.map = match_out_Color[currentIndex];
   currentIndex = (currentIndex+1)%4;
+  PBR_Material_out.map = match_out_Color[currentIndex];
 });
 
 window.addEventListener('touchstart', (event) => {
   event.preventDefault();
   // console.log(`${PBR_Material_out.map}_${currentIndex}`);
-  PBR_Material_out.map = match_out_Color[currentIndex];
   currentIndex = (currentIndex+1)%4;
+  PBR_Material_out.map = match_out_Color[currentIndex];
 }, { passive: false });
 
 
