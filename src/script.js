@@ -151,9 +151,9 @@ dirLight_rim.position.multiplyScalar( 30 );
 scene.add( dirLight_rim );
 
 
-const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.95 );
-hemiLight.color.setHSL( 0.6, 1, 0.6 );
-hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.8 );
+hemiLight.color.setHSL( 0.05, 0.5, 0.85 );
+hemiLight.groundColor.setHSL( 0.55, 1, 0.75 );
 hemiLight.position.set( 0, 50, 0 );
 scene.add( hemiLight );
 
