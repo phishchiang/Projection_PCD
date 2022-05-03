@@ -9,7 +9,7 @@ import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
-// import { FXAAShader } from './jsm/shaders/FXAAShader.js';
+import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader.js';
 
 const loadingScreen = document.getElementById( 'loading-screen' );
 THREE.DefaultLoadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
@@ -106,10 +106,16 @@ let currentIndex = 0;
 window.addEventListener('click', (event) => {
   event.preventDefault();
   // console.log(`${PBR_Material_out.map}_${currentIndex}`);
-
   PBR_Material_out.map = match_out_Color[currentIndex];
   currentIndex = (currentIndex+1)%4;
 });
+
+window.addEventListener('touchstart', (event) => {
+  event.preventDefault();
+  // console.log(`${PBR_Material_out.map}_${currentIndex}`);
+  PBR_Material_out.map = match_out_Color[currentIndex];
+  currentIndex = (currentIndex+1)%4;
+}, { passive: false });
 
 
 
