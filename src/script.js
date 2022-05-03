@@ -57,7 +57,16 @@ const geometry = new THREE.BoxGeometry(10, 5, 10, 32, 64, 64);
 const geometry_sphere = new THREE.SphereGeometry( 1, 64 , 32 );
 
 // Load Textures 
-const T_match_out_Color = new THREE.TextureLoader().load( './textures/T_Matchbox_Out_04_Base_color.png' );
+const match_out_Color = [
+  new THREE.TextureLoader().load( './textures/T_Matchbox_Out_01_Base_color.png' ),
+  new THREE.TextureLoader().load( './textures/T_Matchbox_Out_02_Base_color.png' ),
+  new THREE.TextureLoader().load( './textures/T_Matchbox_Out_03_Base_color.png' ),
+  new THREE.TextureLoader().load( './textures/T_Matchbox_Out_04_Base_color.png' )
+]
+// const T_match_out_Color_01 = new THREE.TextureLoader().load( './textures/T_Matchbox_Out_01_Base_color.png' );
+// const T_match_out_Color_02 = new THREE.TextureLoader().load( './textures/T_Matchbox_Out_02_Base_color.png' );
+// const T_match_out_Color_03 = new THREE.TextureLoader().load( './textures/T_Matchbox_Out_03_Base_color.png' );
+// const T_match_out_Color_04 = new THREE.TextureLoader().load( './textures/T_Matchbox_Out_04_Base_color.png' );
 const T_match_out_Roughness = new THREE.TextureLoader().load( './textures/T_Matchbox_Out_Roughness.png' );
 const T_match_out_Normal = new THREE.TextureLoader().load( './textures/T_Matchbox_Out_Normal_OpenGL.png' );
 const T_match_in_Color = new THREE.TextureLoader().load( './textures/T_Matchbox_In_Base_color.png' );
@@ -91,6 +100,15 @@ window.addEventListener('resize', () => {
   // Update renderer
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+});
+let currentIndex = 0;
+
+window.addEventListener('click', (event) => {
+  event.preventDefault();
+  // console.log(`${PBR_Material_out.map}_${currentIndex}`);
+
+  PBR_Material_out.map = match_out_Color[currentIndex];
+  currentIndex = (currentIndex+1)%4;
 });
 
 
@@ -154,7 +172,7 @@ const PBR_Material_in = new THREE.MeshStandardMaterial({
   normalMap: T_match_in_Normal,
 })
 const PBR_Material_out = new THREE.MeshStandardMaterial({
-  map: T_match_out_Color,
+  map: match_out_Color[0],
   roughnessMap: T_match_out_Roughness,
   normalMap: T_match_out_Normal,
 })
