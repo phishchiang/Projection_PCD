@@ -9,7 +9,7 @@ import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
-import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader.js';
+import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
 
 const loadingScreen = document.getElementById( 'loading-screen' );
 THREE.DefaultLoadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
@@ -34,6 +34,7 @@ THREE.DefaultLoadingManager.onError = function ( url ) {
 
 const fbx_path_01 = './fbx/MSH_Matchbox.fbx';
 const pcd_path_01 = './fbx/42402_96k_pcd.pcd';
+let fxaaPass, composer, smaaPass;
 
 /**
  * Base
@@ -225,10 +226,12 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 const renderScene = new RenderPass( scene, camera );
 
 const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 0.12, 0.32, 0.6 );
+smaaPass = new SMAAPass( window.innerWidth * renderer.getPixelRatio(), window.innerHeight * renderer.getPixelRatio() );
 
-let composer = new EffectComposer( renderer );
+composer = new EffectComposer( renderer );
 composer.addPass( renderScene );
 composer.addPass( bloomPass );
+composer.addPass( smaaPass );
 
 /**
  * Animate
