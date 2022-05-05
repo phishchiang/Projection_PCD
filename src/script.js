@@ -35,6 +35,8 @@ THREE.DefaultLoadingManager.onError = function ( url ) {
 const fbx_path_01 = './fbx/MSH_Matchbox.fbx';
 const pcd_path_01 = './fbx/42402_96k_pcd.pcd';
 let fxaaPass, composer, smaaPass, currentIndex;
+const pointer = new THREE.Vector2();
+let bar_audio, match_audio;
 
 /**
  * Base
@@ -75,9 +77,6 @@ const T_match_in_Roughness = new THREE.TextureLoader().load( './textures/T_Match
 const T_match_in_Normal = new THREE.TextureLoader().load( './textures/T_Matchbox_In_Normal_OpenGL.png' );
 
 
-
-
-
 /**
  * Sizes
  */
@@ -106,15 +105,49 @@ currentIndex = 0;
 window.addEventListener('click', (event) => {
   event.preventDefault();
   // console.log(`${PBR_Material_out.map}_${currentIndex}`);
-  currentIndex = (currentIndex+1)%4;
-  PBR_Material_out.map = match_out_Color[currentIndex];
+
+
+  pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  // console.log(pointer);
+  if(!bar_audio.isPlaying)bar_audio.play();
+  
+  // find intersections
+  raycaster.setFromCamera( pointer, camera );
+  const intersects = raycaster.intersectObjects( scene.children[5].children, false ); 
+  if (intersects.length > 0) {
+    currentIndex = (currentIndex+1)%4;
+    PBR_Material_out.map = match_out_Color[currentIndex];
+
+    console.log(intersects[0]);
+    if(match_audio.isPlaying){
+      match_audio.stop();
+      match_audio.play();
+    } else match_audio.play();
+  }
 });
 
 window.addEventListener('touchstart', (event) => {
   event.preventDefault();
   // console.log(`${PBR_Material_out.map}_${currentIndex}`);
-  currentIndex = (currentIndex+1)%4;
-  PBR_Material_out.map = match_out_Color[currentIndex];
+  
+  pointer.x = ( event.touches[0].clientX / window.innerWidth ) * 2 - 1;
+  pointer.y = - ( event.touches[0].clientY / window.innerHeight ) * 2 + 1;
+  if(!bar_audio.isPlaying)bar_audio.play();
+  
+  // find intersections
+  raycaster.setFromCamera( pointer, camera );
+  const intersects = raycaster.intersectObjects( scene.children[5].children, false ); 
+  if (intersects.length > 0) {
+    currentIndex = (currentIndex+1)%4;
+    PBR_Material_out.map = match_out_Color[currentIndex];
+    
+    console.log(intersects[0]);
+    if(match_audio.isPlaying){
+      match_audio.stop();
+      match_audio.play();
+    } else match_audio.play();
+  }
 }, { passive: false });
 
 
@@ -134,7 +167,38 @@ camera.position.set(-5, 6, 5);
 scene.add(camera);
 
 
+// Audio
 
+// create an AudioListener and add it to the camera
+const listener_bar = new THREE.AudioListener();
+camera.add( listener_bar );
+
+// create a global audio source
+bar_audio = new THREE.Audio( listener_bar );
+
+// load a sound and set it as the Audio object's buffer
+const bar_audio_audioLoader = new THREE.AudioLoader();
+bar_audio_audioLoader.load( './audio/One_Morning_In_May_128.mp3', function( buffer ) {
+	bar_audio.setBuffer( buffer );
+	bar_audio.setLoop( true );
+	// bar_audio.setVolume( 0.5 );
+	// bar_audio.play();
+});
+
+// create an AudioListener and add it to the camera
+const listener_matchbox = new THREE.AudioListener();
+camera.add( listener_matchbox );
+// create a global audio source
+match_audio = new THREE.Audio( listener_matchbox );
+
+// load a sound and set it as the Audio object's buffer
+const match_audio_audioLoader = new THREE.AudioLoader();
+match_audio_audioLoader.load( './audio/matchbox.mp3', function( buffer ) {
+	match_audio.setBuffer( buffer );
+	// match_audio.setLoop( true );
+	match_audio.setVolume( 0.25 );
+	// match_audio.play();
+});
 
 // Lighting
 
@@ -213,6 +277,7 @@ controls.minDistance = 5;
 controls.maxDistance = 12;
 // controls.zoomSpeed = 0;
 
+let raycaster = new THREE.Raycaster();
 
 /**
  * Renderer
