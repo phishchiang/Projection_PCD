@@ -10,6 +10,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
+import { TWEEN } from 'three/examples/jsm/libs/tween.module.min';
 
 const loadingScreen = document.getElementById( 'loading-screen' );
 THREE.DefaultLoadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
@@ -36,7 +37,7 @@ const fbx_path_01 = './fbx/MSH_Matchbox.fbx';
 const pcd_path_01 = './fbx/42402_96k_pcd.pcd';
 let fxaaPass, composer, smaaPass, currentIndex;
 const pointer = new THREE.Vector2();
-let bar_audio, match_audio;
+let bar_audio, match_audio, match_mesh;
 
 /**
  * Base
@@ -110,7 +111,6 @@ window.addEventListener('click', (event) => {
   pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
   pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
   // console.log(pointer);
-  if(!bar_audio.isPlaying)bar_audio.play();
   
   // find intersections
   raycaster.setFromCamera( pointer, camera );
@@ -119,7 +119,21 @@ window.addEventListener('click', (event) => {
     currentIndex = (currentIndex+1)%4;
     PBR_Material_out.map = match_out_Color[currentIndex];
 
-    console.log(intersects[0]);
+    if(!bar_audio.isPlaying)bar_audio.play();
+  
+    // Scale Animation
+    new TWEEN.Tween(match_mesh.scale)
+      .to({x:0.9, y:0.9, z:0.9}, 150)
+      .easing(TWEEN.Easing.Cubic.Out)
+      .start()
+      .onComplete(()=>{
+        new TWEEN.Tween(match_mesh.scale)
+          .to(({x:1, y:1, z:1}),500)
+          .easing(TWEEN.Easing.Elastic.Out)
+          .start()
+      });
+
+    // console.log(intersects[0]);
     if(match_audio.isPlaying){
       match_audio.stop();
       match_audio.play();
@@ -133,7 +147,6 @@ window.addEventListener('touchstart', (event) => {
   
   pointer.x = ( event.touches[0].clientX / window.innerWidth ) * 2 - 1;
   pointer.y = - ( event.touches[0].clientY / window.innerHeight ) * 2 + 1;
-  if(!bar_audio.isPlaying)bar_audio.play();
   
   // find intersections
   raycaster.setFromCamera( pointer, camera );
@@ -141,8 +154,21 @@ window.addEventListener('touchstart', (event) => {
   if (intersects.length > 0) {
     currentIndex = (currentIndex+1)%4;
     PBR_Material_out.map = match_out_Color[currentIndex];
+
+    if(!bar_audio.isPlaying)bar_audio.play();
     
-    console.log(intersects[0]);
+    // Scale Animation
+    new TWEEN.Tween(match_mesh.scale)
+    .to({x:0.9, y:0.9, z:0.9}, 200)
+    .easing(TWEEN.Easing.Cubic.In)
+    .start()
+    .onComplete(()=>{
+      new TWEEN.Tween(match_mesh.scale)
+        .to(({x:1, y:1, z:1}),500)
+        .easing(TWEEN.Easing.Elastic.Out)
+        .start()
+    });
+    
     if(match_audio.isPlaying){
       match_audio.stop();
       match_audio.play();
@@ -155,7 +181,7 @@ window.addEventListener('touchstart', (event) => {
 /**
  * Camera
  */
-// Base camera
+// Base cameraAudio
 const camera = new THREE.PerspectiveCamera(
   75,
   sizes.width / sizes.height,
@@ -251,7 +277,7 @@ const loader = new FBXLoader();
 
 
 loader.load(fbx_path_01, function (object) {
-
+  match_mesh = object;
   object.traverse(function (child) {
     if (child.isMesh) {
       child.castShadow = true;
@@ -314,6 +340,8 @@ const tick = () => {
 
   // Call tick again on the next frame
   window.requestAnimationFrame(tick);
+
+  TWEEN.update()
 
   const elapsedTime = clock.getElapsedTime();
 };
