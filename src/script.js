@@ -205,7 +205,7 @@ bar_audio = new THREE.Audio( listener_bar );
 
 // load a sound and set it as the Audio object's buffer
 const bar_audio_audioLoader = new THREE.AudioLoader();
-bar_audio_audioLoader.load( './audio/One_Morning_In_May_128.mp3', function( buffer ) {
+bar_audio_audioLoader.load( './audio/music.mp3', function( buffer ) {
 	bar_audio.setBuffer( buffer );
 	bar_audio.setLoop( true );
 	// bar_audio.setVolume( 0.5 );
