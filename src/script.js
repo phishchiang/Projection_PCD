@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import * as dat from 'dat.gui';
-import PP_Grain_VertexShader from './shaders/PP_Grain/vertex.glsl';
-import PP_Grain_FragmentShader from './shaders/PP_Grain/fragment.glsl';
+// import PP_Grain_VertexShader from './shaders/PP_Grain/vertex.glsl';
+// import PP_Grain_FragmentShader from './shaders/PP_Grain/fragment.glsl';
 import { PCDLoader } from 'three/examples/jsm/loaders/PCDLoader.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
@@ -44,7 +44,7 @@ let bar_audio, match_audio, match_mesh;
  * Base
  */
 // Debug
-const gui = new dat.GUI();
+// const gui = new dat.GUI();
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl');
@@ -321,30 +321,30 @@ const renderScene = new RenderPass( scene, camera );
 const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 0.12, 0.32, 0.6 );
 smaaPass = new SMAAPass( window.innerWidth * renderer.getPixelRatio(), window.innerHeight * renderer.getPixelRatio());
 
-let counter = 0.0;
+// let counter = 0.0;
 
-const PP_Grain_Shader = new THREE.ShaderMaterial({
-  uniforms: {
-    uGrain_Multiplier: { value: new THREE.Vector2(0.08, 0) },
-    "tDiffuse": { value: null },
-    "amount": { value: counter }
-  },
-  vertexShader: PP_Grain_VertexShader,
-  fragmentShader: PP_Grain_FragmentShader
-})
+// const PP_Grain_Shader = new THREE.ShaderMaterial({
+//   uniforms: {
+//     uGrain_Multiplier: { value: new THREE.Vector2(0.08, 0) },
+//     "tDiffuse": { value: null },
+//     "amount": { value: counter }
+//   },
+//   vertexShader: PP_Grain_VertexShader,
+//   fragmentShader: PP_Grain_FragmentShader
+// })
 
 // gui.add(PP_Grain_Shader.uniforms, 'uGrain_Multiplier').min(0).max(50).step(0.01).name('uTest_X');
-gui.add(PP_Grain_Shader.uniforms.uGrain_Multiplier.value, 'x').min(0).max(0.2).step(0.001).name('uGrain_Multiplier');
+// gui.add(PP_Grain_Shader.uniforms.uGrain_Multiplier.value, 'x').min(0).max(0.2).step(0.001).name('uGrain_Multiplier');
 
 
 
-const PP_Grain_Pass = new ShaderPass( PP_Grain_Shader );
+// const PP_Grain_Pass = new ShaderPass( PP_Grain_Shader );
 
 composer = new EffectComposer( renderer );
 composer.addPass( renderScene );
 composer.addPass( bloomPass );
 composer.addPass( smaaPass );
-composer.addPass( PP_Grain_Pass );
+// composer.addPass( PP_Grain_Pass );
 
 /**
  * Animate
@@ -365,9 +365,9 @@ const tick = () => {
   // Animation
   TWEEN.update()
 
-  // PP_Grain
-  counter += 0.01;
-  PP_Grain_Pass.uniforms["amount"].value = counter;
+  // // PP_Grain
+  // counter += 0.01;
+  // PP_Grain_Pass.uniforms["amount"].value = counter;
 
   const elapsedTime = clock.getElapsedTime();
 };
