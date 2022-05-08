@@ -106,6 +106,8 @@ window.addEventListener('resize', () => {
 currentIndex = 0;
 window.addEventListener('click', (event) => {
   event.preventDefault();
+  controls.autoRotate = false;
+  setTimeout(() => controls.autoRotate = true, 3000);
   // console.log(`${PBR_Material_out.map}_${currentIndex}`);
 
 
@@ -144,6 +146,8 @@ window.addEventListener('click', (event) => {
 
 window.addEventListener('touchstart', (event) => {
   event.preventDefault();
+  controls.autoRotate = false;
+  setTimeout(() => controls.autoRotate = true, 3000);
   // console.log(`${PBR_Material_out.map}_${currentIndex}`);
   
   pointer.x = ( event.touches[0].clientX / window.innerWidth ) * 2 - 1;
@@ -299,6 +303,8 @@ loader.load(fbx_path_01, function (object) {
 // Controls
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
+setTimeout(() => controls.autoRotate = true, 3000);
+controls.autoRotateSpeed  = 1;
 controls.panSpeed = 0;
 controls.minDistance = 5;
 controls.maxDistance = 12;
